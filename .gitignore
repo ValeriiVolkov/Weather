@@ -55,5 +55,3 @@ freeline/
 freeline_project_description.json
 .idea/
 app/proguard-rules.pro
-gradle/wrapper/gradle-wrapper.properties
-gradle/wrapper/gradle-wrapper.jar
