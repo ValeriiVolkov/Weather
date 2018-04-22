@@ -1,34 +1,55 @@
 package weather.vvolkov.repositories.location;
 
 import android.annotation.SuppressLint;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
+import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.Maybe;
 import weather.vvolkov.models.location.Location;
 
+@SuppressLint("MissingPermission")
 public class LocationRepository implements ILocationRepository {
-    @NonNull
-    private final FusedLocationProviderClient locationClient;
+    @Nullable
+    private final LocationManager locationManager;
 
-    public LocationRepository(@NonNull FusedLocationProviderClient locationClient) {
-        this.locationClient = locationClient;
+    public LocationRepository(@Nullable LocationManager locationManager) {
+        this.locationManager = locationManager;
     }
 
-    @SuppressLint("MissingPermission")
     @NonNull
     @Override
-    public Single<Location> getCurrentLocation() {
-        return Single.create(emitter -> {
-            try {
-                locationClient.getLastLocation().addOnSuccessListener(
-                        location -> emitter.onSuccess(new Location(location.getLatitude(),
-                                location.getLongitude()))
-                );
-            } catch (Exception e) {
-                emitter.onError(e);
-            }
-        });
+    public Maybe<Location> getCurrentLocation() {
+        if (locationManager == null) {
+            return Maybe.empty();
+        } else {
+            return Maybe.fromCallable(() -> {
+                final android.location.Location location = getLastKnownLocation();
+                if (location == null) throw new IllegalStateException("Location is null");
+
+                return new Location(location.getLatitude(), location.getLongitude());
+            });
+        }
     }
+
+    @Nullable
+    private android.location.Location getLastKnownLocation() {
+        if (locationManager == null) return null;
+
+        final List<String> providers = locationManager.getProviders(true);
+        android.location.Location bestLocation = null;
+        for (String provider : providers) {
+            android.location.Location l = locationManager.getLastKnownLocation(provider);
+            if (l == null) continue;
+
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
+        }
+        return bestLocation;
+    }
+
 }

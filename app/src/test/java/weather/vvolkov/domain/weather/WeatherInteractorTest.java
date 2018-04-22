@@ -2,21 +2,25 @@ package weather.vvolkov.domain.weather;
 
 import android.support.annotation.NonNull;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import io.reactivex.Single;
+import weather.vvolkov.models.location.Location;
 import weather.vvolkov.models.weather.WeatherInfo;
 import weather.vvolkov.repositories.weather.IWeatherRepository;
 import weather.vvolkov.utils.exception.GetWeatherException;
 
 import static org.mockito.Mockito.when;
+import static weather.vvolkov.data.network.WeatherApi.BASE_URL;
 
 public class WeatherInteractorTest {
-    private static final int LATITUDE = 0;
-    private static final int LONGITUDE = 0;
+    private static final Location LOCATION = new Location(0, 0);
+    private static final String ICON_ID = "123";
+    private static final String LONDON = "London";
 
     @Mock
     private IWeatherRepository weatherRepository;
@@ -33,23 +37,46 @@ public class WeatherInteractorTest {
     }
 
     @Test
-    public void getWeatherInfo_repositoryReturnedResult_success() {
+    public void getWeatherInfoByCoordinates_repositoryReturnedResult_success() {
         final WeatherInfo weatherInfo = new WeatherInfo();
-        when(weatherRepository.getWeatherInfo(LATITUDE, LONGITUDE))
+        when(weatherRepository.getWeatherInfo(LOCATION.getLattiude(), LOCATION.getLongitude()))
                 .thenReturn(Single.just(weatherInfo));
 
-        weatherInteractor.getWeatherInfo(LATITUDE, LONGITUDE)
+        weatherInteractor.getWeatherInfo(LOCATION)
                 .test()
                 .assertValue(item -> item == weatherInfo);
     }
 
     @Test
-    public void getWeatherInfo_repositoryThrowsError_errorReturned() {
-        when(weatherRepository.getWeatherInfo(LATITUDE, LONGITUDE))
+    public void getWeatherInfByCoordinates_repositoryThrowsError_errorReturned() {
+        when(weatherRepository.getWeatherInfo(LOCATION.getLattiude(), LOCATION.getLongitude()))
                 .thenReturn(Single.error(new GetWeatherException()));
 
-        weatherInteractor.getWeatherInfo(LATITUDE, LONGITUDE)
+        weatherInteractor.getWeatherInfo(LOCATION)
                 .test()
                 .assertError(GetWeatherException.class);
+    }
+
+    @Test
+    public void getWeatherInfoByCityName_repositoryReturnedResult_success() {
+        final WeatherInfo weatherInfo = new WeatherInfo();
+        when(weatherRepository.getWeatherInfo(LONDON))
+                .thenReturn(Single.just(weatherInfo));
+
+        weatherInteractor.getWeatherInfo(LONDON)
+                .test()
+                .assertValue(item -> item == weatherInfo);
+    }
+
+    @Test
+    public void getWeatherIconUrl_success() {
+        final String weatherIconUrl = weatherInteractor.getWeatherIconUrl(ICON_ID);
+        Assert.assertEquals(weatherIconUrl, BASE_URL + "/img/w/" + ICON_ID + ".png");
+    }
+
+    @Test
+    public void getWeatherIconUrl_emptyInput_resultWithoudCodeReturned() {
+        final String weatherIconUrl = weatherInteractor.getWeatherIconUrl("");
+        Assert.assertEquals(weatherIconUrl, BASE_URL + "/img/w/.png");
     }
 }

@@ -3,4 +3,12 @@
     <string name="nothing">Nothing to show…\nEnter search text</string>
     <string name="search_text">Search text</string>
     <string name="icon_placeholder">Icon placeholder</string>
+    <string name="city_title">City title</string>
+    <string name="weather_info_image">Weather info image</string>
+    <string name="search">Search</string>
+    <string name="open_web_page">Open WEB page</string>
+    <string name="temperature">Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="short_description">Short description</string>
 </resources>

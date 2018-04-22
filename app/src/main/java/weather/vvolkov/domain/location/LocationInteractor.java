@@ -2,7 +2,7 @@ package weather.vvolkov.domain.location;
 
 import android.support.annotation.NonNull;
 
-import io.reactivex.Single;
+import io.reactivex.Maybe;
 import weather.vvolkov.models.location.Location;
 import weather.vvolkov.repositories.location.ILocationRepository;
 
@@ -16,7 +16,7 @@ public class LocationInteractor implements ILocationInteractor {
 
     @NonNull
     @Override
-    public Single<Location> getCurrentLocation() {
+    public Maybe<Location> getCurrentLocation() {
         return locationRepository.getCurrentLocation();
     }
 }

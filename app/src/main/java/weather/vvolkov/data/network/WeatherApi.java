@@ -2,6 +2,7 @@ package weather.vvolkov.data.network;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -17,7 +18,7 @@ public interface WeatherApi {
                                    @Query("units") @NonNull String units);
 
     @GET("/data/2.5/weather")
-    Single<WeatherInfo> getWeather(@Query("q") @NonNull String city,
-                                   @Query("appid") @NonNull String appId,
-                                   @Query("units") @NonNull String units);
+    Observable<WeatherInfo> getWeather(@Query("id") long cityId,
+                                       @Query("appid") @NonNull String appId,
+                                       @Query("units") @NonNull String units);
 }

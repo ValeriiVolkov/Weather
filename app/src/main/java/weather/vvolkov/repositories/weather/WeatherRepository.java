@@ -2,6 +2,7 @@ package weather.vvolkov.repositories.weather;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import weather.vvolkov.data.network.WeatherApi;
 import weather.vvolkov.models.weather.WeatherInfo;
@@ -28,5 +29,11 @@ public class WeatherRepository implements IWeatherRepository {
     @Override
     public Single<WeatherInfo> getWeatherInfo(double latitude, double longitude) {
         return weatherApi.getWeather(latitude, longitude, APP_ID, METRIC);
+    }
+
+    @NonNull
+    @Override
+    public Observable<WeatherInfo> getWeatherInfo(long cityId) {
+        return weatherApi.getWeather(cityId, APP_ID, METRIC);
     }
 }
