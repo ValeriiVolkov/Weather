@@ -8,12 +8,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
 import weather.vvolkov.models.location.Location;
 import weather.vvolkov.models.weather.WeatherInfo;
 import weather.vvolkov.repositories.weather.IWeatherRepository;
 import weather.vvolkov.utils.exception.GetWeatherException;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static weather.vvolkov.data.network.WeatherApi.BASE_URL;
 
@@ -21,6 +23,7 @@ public class WeatherInteractorTest {
     private static final Location LOCATION = new Location(0, 0);
     private static final String ICON_ID = "123";
     private static final String LONDON = "London";
+    public static final String CITY_NAME = "cityName";
 
     @Mock
     private IWeatherRepository weatherRepository;
@@ -38,13 +41,13 @@ public class WeatherInteractorTest {
 
     @Test
     public void getWeatherInfoByCoordinates_repositoryReturnedResult_success() {
-        final WeatherInfo weatherInfo = new WeatherInfo();
+        final WeatherInfo weatherInfo = new WeatherInfo(CITY_NAME);
         when(weatherRepository.getWeatherInfo(LOCATION.getLattiude(), LOCATION.getLongitude()))
                 .thenReturn(Single.just(weatherInfo));
 
         weatherInteractor.getWeatherInfo(LOCATION)
                 .test()
-                .assertValue(item -> item == weatherInfo);
+                .assertValue(item -> item.getName().equalsIgnoreCase(CITY_NAME));
     }
 
     @Test
@@ -59,13 +62,13 @@ public class WeatherInteractorTest {
 
     @Test
     public void getWeatherInfoByCityName_repositoryReturnedResult_success() {
-        final WeatherInfo weatherInfo = new WeatherInfo();
-        when(weatherRepository.getWeatherInfo(LONDON))
-                .thenReturn(Single.just(weatherInfo));
+        final WeatherInfo weatherInfo = new WeatherInfo(CITY_NAME);
+        when(weatherRepository.getWeatherInfo(anyLong()))
+                .thenReturn(Observable.just(weatherInfo));
 
-        weatherInteractor.getWeatherInfo(LONDON)
+        weatherInteractor.getWeatherInfo(1L)
                 .test()
-                .assertValue(item -> item == weatherInfo);
+                .assertValue(item -> item.getName().equalsIgnoreCase(weatherInfo.getName()));
     }
 
     @Test

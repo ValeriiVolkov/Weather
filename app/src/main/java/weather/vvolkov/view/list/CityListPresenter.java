@@ -1,13 +1,13 @@
 package weather.vvolkov.view.list;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import weather.vvolkov.domain.city.ICityInteractor;
 import weather.vvolkov.domain.location.ILocationInteractor;
 import weather.vvolkov.domain.weather.IWeatherInteractor;
+import weather.vvolkov.utils.Log;
 import weather.vvolkov.utils.rx2.IRx2Scheduler;
 
 class CityListPresenter {
@@ -59,7 +59,7 @@ class CityListPresenter {
                 .subscribe(weatherView::showWeatherInfoScreen,
                         throwable -> {
                             weatherView.showToast(throwable.getMessage());
-                            Log.e(TAG, throwable.getMessage(), throwable);
+                            Log.e(throwable);
                         });
         compositeDisposable.add(disposable);
     }

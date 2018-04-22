@@ -1,7 +1,6 @@
 package weather.vvolkov.view.info;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
@@ -10,6 +9,7 @@ import io.reactivex.disposables.Disposable;
 import weather.vvolkov.domain.weather.IWeatherInteractor;
 import weather.vvolkov.models.weather.Weather;
 import weather.vvolkov.models.weather.WeatherInfo;
+import weather.vvolkov.utils.Log;
 import weather.vvolkov.utils.rx2.IRx2Scheduler;
 
 class WeatherInfoPresenter {
@@ -52,7 +52,7 @@ class WeatherInfoPresenter {
                             weatherInfoView.showInfo(weatherInfo);
                             onWeatherInfoShow(weatherInfo);
                         },
-                        throwable -> Log.e(TAG, throwable.getMessage(), throwable));
+                        Log::e);
         compositeDisposable.add(disposable);
     }
 

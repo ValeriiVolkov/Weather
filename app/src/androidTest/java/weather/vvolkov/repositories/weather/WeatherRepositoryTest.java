@@ -36,4 +36,6 @@ public class WeatherRepositoryTest {
                 .test()
                 .assertError(HttpException.class);
     }
+
+    //TODO Write more tests
 }
