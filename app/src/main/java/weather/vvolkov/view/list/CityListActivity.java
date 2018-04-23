@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import weather.vvolkov.R;
@@ -74,7 +75,7 @@ public class CityListActivity extends AppCompatActivity implements ICityListView
 
         adapter = new CityAdapter(this);
         final EmptyRecyclerView recyclerView = findViewById(R.id.recyclerView);
-        final LinearLayout emptyView = findViewById(R.id.emptyListPlaceholder);
+        final TextView emptyView = findViewById(R.id.emptyListPlaceholder);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
         recyclerView.setEmptyView(emptyView);
